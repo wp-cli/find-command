@@ -21,6 +21,7 @@ class Find_Command {
 		'/.subversion/',
 		'/__MACOSX/',
 		// Webserver directories
+		'/cache/',
 		'/logs/',
 		'/debuglogs/',
 		'/Maildir/',
