@@ -16,6 +16,7 @@ class Find_Command {
 	private $ignored_paths = array(
 		'/.git/',
 		'/.svn/',
+		'/logs/',
 		'/wp-admin/',
 		'/wp-content/',
 		'/node_modules/',
