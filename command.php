@@ -22,6 +22,7 @@ class Find_Command {
 		'/__MACOSX/',
 		// Webserver directories
 		'/logs/',
+		'/debuglogs/',
 		'/Maildir/',
 		// JavaScript dependency management
 		'/node_modules/',
