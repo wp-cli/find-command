@@ -21,6 +21,7 @@ class Find_Command {
 		'/wp-content/',
 		'/node_modules/',
 		'/bower_components/',
+		'/Maildir/', // User's sent email directory
 	);
 
 	/**
