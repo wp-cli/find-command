@@ -20,6 +20,15 @@ with a version.php file.
 Avoids recursing some known paths (e.g. node_modules) to significantly
 improve performance.
 
+```
+$ wp find ./
++---------------------------------------------------------------------+---------------------+
+| version_path                                                        | version             |
++---------------------------------------------------------------------+---------------------+
+| /Users/wpcli/projects/wordpress-develop/src/wp-includes/version.php | 4.8-alpha-39357-src |
++---------------------------------------------------------------------+---------------------+
+```
+
 **OPTIONS**
 
 	<path>
