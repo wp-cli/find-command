@@ -6,7 +6,7 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 
 use WP_CLI\Utils;
 
-class Finder_Command {
+class Find_Command {
 
 	/**
 	 * Paths we can probably ignore recursion into.
@@ -43,7 +43,7 @@ class Finder_Command {
 	private $found_wp = array();
 
 	/**
-	 * Finds WordPress installs on the filesystem.
+	 * Find WordPress installs on the filesystem.
 	 *
 	 * Recursively iterates subdirectories of provided `<path>` to find and
 	 * report WordPress installs. A WordPress install is a wp-includes directory
@@ -156,5 +156,5 @@ class Finder_Command {
 	}
 
 }
-WP_CLI::add_command( 'find-wp', 'Finder_Command' );
+WP_CLI::add_command( 'find', 'Find_Command' );
 

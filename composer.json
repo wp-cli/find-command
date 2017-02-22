@@ -1,8 +1,8 @@
 {
-    "name": "danielbachhuber/finder-command",
-    "description": "",
+    "name": "wp-cli/find-command",
+    "description": "Find WordPress installs on the filesystem.",
     "type": "wp-cli-package",
-    "homepage": "https://github.com/danielbachhuber/finder-command",
+    "homepage": "https://github.com/wp-cli/finder-command",
     "license": "MIT",
     "authors": [],
     "minimum-stability": "dev",
@@ -17,7 +17,7 @@
     },
     "extra": {
         "commands": [
-            "find-wp"
+            "find"
         ]
     }
 }
