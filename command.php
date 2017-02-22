@@ -39,6 +39,13 @@ class Find_Command {
 	private $verbose = false;
 
 	/**
+	 * Start time for the script.
+	 *
+	 * @var integer
+	 */
+	private $start_time = false;
+
+	/**
 	 * Found WordPress installs.
 	 *
 	 * @var array
@@ -99,6 +106,7 @@ class Find_Command {
 		$path = realpath( $path );
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
+		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installs in {$path}" );
 		$this->recurse_directory( $path );
 		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version' ) );
@@ -163,8 +171,23 @@ class Find_Command {
 	 */
 	private function log( $message ) {
 		if ( $this->verbose ) {
-			WP_CLI::log( $message );
+			$elapsed_time = microtime( true ) - $this->start_time;
+			WP_CLI::log( sprintf( '[%s] %s', self::format_log_timestamp( $elapsed_time ), $message ) );
 		}
+	}
+
+	/**
+	 * Format a log timestamp into something human-readable.
+	 *
+	 * @param integer $s Log time in seconds
+	 * @return string
+	 */
+	private static function format_log_timestamp( $s ) {
+		$h = floor( $s / 3600 );
+		$s -= $h * 3600;
+		$m = floor( $s / 60 );
+		$s -= $m * 60;
+		return $h . ':' . sprintf( '%02d', $m ) . ':' . sprintf( '%02d', $s );
 	}
 
 }
