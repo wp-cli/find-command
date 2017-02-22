@@ -25,6 +25,7 @@ class Find_Command {
 		'/logs/',
 		'/debuglogs/',
 		'/Maildir/',
+		'/tmp/',
 		// JavaScript dependency management
 		'/node_modules/',
 		'/bower_components/',
