@@ -14,14 +14,21 @@ class Find_Command {
 	 * @var array
 	 */
 	private $ignored_paths = array(
+		// System directories
+		'/.ssh/',
 		'/.git/',
 		'/.svn/',
+		'/.subversion/',
+		'/__MACOSX/',
+		// Webserver directories
 		'/logs/',
-		'/wp-admin/',
-		'/wp-content/',
+		'/Maildir/',
+		// JavaScript dependency management
 		'/node_modules/',
 		'/bower_components/',
-		'/Maildir/', // User's sent email directory
+		// Already in a WordPress install
+		'/wp-admin/',
+		'/wp-content/',
 	);
 
 	/**
