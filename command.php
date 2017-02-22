@@ -19,6 +19,7 @@ class Find_Command {
 		'/wp-admin/',
 		'/wp-content/',
 		'/node_modules/',
+		'/bower_components/',
 	);
 
 	/**
