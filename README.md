@@ -10,7 +10,7 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 ## Using
 
 ~~~
-wp find <path> [--depth=<depth>] [--skip-ignored-paths] [--field=<field>] [--format=<format>] [--verbose]
+wp find <path> [--skip-ignored-paths] [--field=<field>] [--format=<format>] [--verbose]
 ~~~
 
 Recursively iterates subdirectories of provided `<path>` to find and
@@ -33,9 +33,6 @@ $ wp find ./
 
 	<path>
 		Path to search the subdirectories of.
-
-	[--depth=<depth>]
-		Limit recursion to a specific depth.
 
 	[--skip-ignored-paths]
 		Skip the paths that are ignored by default.
