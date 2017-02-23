@@ -32,6 +32,7 @@ class Find_Command {
 		// Already in a WordPress install
 		'/wp-admin/',
 		'/wp-content/',
+		'/uploads/',
 	);
 
 	/**
