@@ -26,13 +26,18 @@ class Find_Command {
 		'/debuglogs/',
 		'/Maildir/',
 		'/tmp/',
-		// JavaScript dependency management
+		// Generic application directories
+		'/uploads/',
+		'/themes/',
+		'/plugins/',
+		'/modules/',
+		// Dependency management
 		'/node_modules/',
 		'/bower_components/',
+		'/vendor/',
 		// Already in a WordPress install
 		'/wp-admin/',
 		'/wp-content/',
-		'/uploads/',
 	);
 
 	/**
