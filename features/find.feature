@@ -19,3 +19,19 @@ Feature: Find WordPress installs on the filesystem
       """
       2
       """
+
+  Scenario: WordPress install isn't found by default when in an ignored directory
+    Given a WP install in 'subdir1'
+    And a WP install in 'cache'
+
+    When I run `wp find ./ --format=count`
+    Then STDOUT should be:
+      """
+      1
+      """
+
+    When I run `wp find ./ --format=count --skip-ignored-paths`
+    Then STDOUT should be:
+      """
+      2
+      """
