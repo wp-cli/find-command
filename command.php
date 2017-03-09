@@ -95,8 +95,11 @@ class Find_Command {
 	 * [--skip-ignored-paths]
 	 * : Skip the paths that are ignored by default.
 	 *
+	 * [--fields=<fields>]
+	 * : Limit the output to specific row fields.
+	 *
 	 * [--field=<field>]
-	 * : Output a specific field.
+	 * : Output a specific field for each row.
 	 *
 	 * [--format=<format>]
 	 * : Render output in a specific format.
@@ -107,6 +110,7 @@ class Find_Command {
 	 *   - json
 	 *   - csv
 	 *   - yaml
+	 *   - count
 	 * ---
 	 *
 	 * [--verbose]
