@@ -41,6 +41,13 @@ class Find_Command {
 	);
 
 	/**
+	 * Beginning of the recursion path.
+	 *
+	 * @var string
+	 */
+	private $base_path;
+
+	/**
 	 * Whether or not to skip ignored paths.
 	 *
 	 * @var bool
@@ -120,12 +127,12 @@ class Find_Command {
 	 */
 	public function __invoke( $args, $assoc_args ) {
 		list( $path ) = $args;
-		$path = realpath( $path );
+		$this->base_path = realpath( $path );
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
 		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installs in {$path}" );
-		$this->recurse_directory( $path );
+		$this->recurse_directory( $this->base_path );
 		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version' ) );
 		$formatter->display_items( $this->found_wp );
 	}
@@ -142,11 +149,8 @@ class Find_Command {
 
 		// Don't recurse directories that probably don't have a WordPress install.
 		if ( ! $this->skip_ignored_paths ) {
-			$compared_path = $path;
-			// Don't attempt to compare the /tmp/ at the base of the test run directory
-			if ( '/tmp/' === substr( $compared_path, 0, 5 ) && getenv( 'BEHAT_RUN' ) ) {
-				$compared_path = substr( $compared_path, 4 );
-			}
+			// Assume base path doesn't need comparison
+			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
 			foreach( $this->ignored_paths as $ignored_path ) {
 				if ( false !== stripos( $compared_path, $ignored_path ) ) {
 					$this->log( "Matched ignored path. Skipping recursion into {$path}" );
