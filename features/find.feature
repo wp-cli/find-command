@@ -7,14 +7,14 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
     Then save STDOUT as {TEST_DIR}
 
-    When I run `wp find ./ --field=version_path`
+    When I run `wp find {TEST_DIR} --field=version_path`
     Then STDOUT should be:
       """
       {TEST_DIR}/subdir1/wp-includes/version.php
       {TEST_DIR}/subdir2/wp-includes/version.php
       """
 
-    When I run `wp find ./ --field=version_path --verbose`
+    When I run `wp find {TEST_DIR} --field=version_path --verbose`
     Then STDOUT should contain:
       """
       Found WordPress install at {TEST_DIR}/subdir1/wp-includes/version.php
@@ -24,7 +24,7 @@ Feature: Find WordPress installs on the filesystem
       Found WordPress install at {TEST_DIR}/subdir2/wp-includes/version.php
       """
 
-    When I run `wp find ./ --format=count`
+    When I run `wp find {TEST_DIR} --format=count`
     Then STDOUT should be:
       """
       2
@@ -37,7 +37,7 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
     Then save STDOUT as {TEST_DIR}
 
-    When I run `wp find ./ --field=version_path --verbose`
+    When I run `wp find {TEST_DIR} --field=version_path --verbose`
     Then STDOUT should contain:
       """
       Found WordPress install at {TEST_DIR}/subdir1/wp-includes/version.php
@@ -51,13 +51,13 @@ Feature: Find WordPress installs on the filesystem
       Matched ignored path. Skipping recursion into {TEST_DIR}/cache
       """
 
-    When I run `wp find ./ --format=count`
+    When I run `wp find {TEST_DIR} --format=count`
     Then STDOUT should be:
       """
       1
       """
 
-    When I run `wp find ./ --format=count --skip-ignored-paths`
+    When I run `wp find {TEST_DIR} --format=count --skip-ignored-paths`
     Then STDOUT should be:
       """
       2
