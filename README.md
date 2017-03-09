@@ -10,7 +10,7 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 ## Using
 
 ~~~
-wp find <path> [--skip-ignored-paths] [--field=<field>] [--format=<format>] [--verbose]
+wp find <path> [--skip-ignored-paths] [--fields=<fields>] [--field=<field>] [--format=<format>] [--verbose]
 ~~~
 
 Recursively iterates subdirectories of provided `<path>` to find and
@@ -37,8 +37,11 @@ $ wp find ./
 	[--skip-ignored-paths]
 		Skip the paths that are ignored by default.
 
+	[--fields=<fields>]
+		Limit the output to specific row fields.
+
 	[--field=<field>]
-		Output a specific field.
+		Output a specific field for each row.
 
 	[--format=<format>]
 		Render output in a specific format.
@@ -49,6 +52,7 @@ $ wp find ./
 		  - json
 		  - csv
 		  - yaml
+		  - count
 		---
 
 	[--verbose]
