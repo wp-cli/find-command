@@ -33,6 +33,7 @@ Feature: Find WordPress installs on the filesystem
   Scenario: WordPress install isn't found by default when in an ignored directory
     Given a WP install in 'subdir1'
     And a WP install in 'cache'
+    And a WP install in 'tmp'
 
     When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
     Then save STDOUT as {TEST_DIR}
@@ -50,6 +51,10 @@ Feature: Find WordPress installs on the filesystem
       """
       Matched ignored path. Skipping recursion into {TEST_DIR}/cache
       """
+    And STDOUT should contain:
+      """
+      Matched ignored path. Skipping recursion into {TEST_DIR}/tmp
+      """
 
     When I run `wp find {TEST_DIR} --format=count`
     Then STDOUT should be:
@@ -60,5 +65,5 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --format=count --skip-ignored-paths`
     Then STDOUT should be:
       """
-      2
+      3
       """

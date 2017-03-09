@@ -142,8 +142,13 @@ class Find_Command {
 
 		// Don't recurse directories that probably don't have a WordPress install.
 		if ( ! $this->skip_ignored_paths ) {
+			$compared_path = $path;
+			// Don't attempt to compare the /tmp/ at the base of the test run directory
+			if ( '/tmp/' === substr( $compared_path, 0, 5 ) && getenv( 'BEHAT_RUN' ) ) {
+				$compared_path = substr( $compared_path, 4 );
+			}
 			foreach( $this->ignored_paths as $ignored_path ) {
-				if ( false !== stripos( $path, $ignored_path ) ) {
+				if ( false !== stripos( $compared_path, $ignored_path ) ) {
 					$this->log( "Matched ignored path. Skipping recursion into {$path}" );
 					return;
 				}
