@@ -1,2 +1,2 @@
 require:
-  - command.php
+  - find-command.php

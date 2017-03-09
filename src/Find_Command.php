@@ -1,9 +1,5 @@
 <?php
 
-if ( ! class_exists( 'WP_CLI' ) ) {
-	return;
-}
-
 use WP_CLI\Utils;
 
 class Find_Command {
@@ -217,5 +213,3 @@ class Find_Command {
 	}
 
 }
-WP_CLI::add_command( 'find', 'Find_Command' );
-
