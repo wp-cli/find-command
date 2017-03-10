@@ -141,6 +141,9 @@ class Find_Command {
 	public function __invoke( $args, $assoc_args ) {
 		list( $path ) = $args;
 		$this->base_path = realpath( $path );
+		if ( ! $this->base_path ) {
+			WP_CLI::error( 'Invalid path specified.' );
+		}
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
@@ -195,8 +198,13 @@ class Find_Command {
 
 		// Check all files and directories of this path to recurse
 		// into subdirectories.
+		try {
+			$iterator = new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS );
+		} catch( Exception $e ) {
+			$this->log( "Exception thrown '{$e->getMessage()}'. Skipping recursion into '{$path}'" );
+			return;
+		}
 		$this->log( "Recusing into '{$path}'" );
-		$iterator = new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS );
 		foreach( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
 				$this->current_depth++;
