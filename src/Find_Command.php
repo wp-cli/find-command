@@ -51,6 +51,20 @@ class Find_Command {
 	private $skip_ignored_paths = false;
 
 	/**
+	 * Maximum folder depth to recurse into.
+	 *
+	 * @var integer|false
+	 */
+	private $max_depth = false;
+
+	/**
+	 * Current folder recursion depth.
+	 *
+	 * @var integer
+	 */
+	private $current_depth = 0;
+
+	/**
 	 * Whether or not to be verbose with informational output.
 	 *
 	 * @var bool
@@ -98,6 +112,9 @@ class Find_Command {
 	 * [--skip-ignored-paths]
 	 * : Skip the paths that are ignored by default.
 	 *
+	 * [--max_depth=<max-depth>]
+	 * : Only recurse to a specified depth, inclusive.
+	 *
 	 * [--fields=<fields>]
 	 * : Limit the output to specific row fields.
 	 *
@@ -125,11 +142,12 @@ class Find_Command {
 		list( $path ) = $args;
 		$this->base_path = realpath( $path );
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
+		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
 		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installs in {$path}" );
 		$this->recurse_directory( $this->base_path );
-		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version' ) );
+		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth' ) );
 		$formatter->display_items( $this->found_wp );
 	}
 
@@ -163,8 +181,15 @@ class Find_Command {
 			$this->found_wp[ $version_path ] = array(
 				'version_path' => $version_path,
 				'version'      => self::get_wp_version( $version_path ),
+				'depth'        => $this->current_depth - 1,
 			);
 			$this->log( "Found WordPress install at {$version_path}" );
+			return;
+		}
+
+		// Ensure we haven't exceeded our max recursion depth
+		if ( false !== $this->max_depth && $this->current_depth > $this->max_depth ) {
+			$this->log( "Exceeded max depth. Skipping recursion into {$path}" );
 			return;
 		}
 
@@ -174,7 +199,9 @@ class Find_Command {
 		$iterator = new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS );
 		foreach( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
+				$this->current_depth++;
 				$this->recurse_directory( $file_info->getPathname() );
+				$this->current_depth--;
 			}
 		}
 	}
