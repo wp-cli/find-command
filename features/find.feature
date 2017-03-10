@@ -152,3 +152,12 @@ Feature: Find WordPress installs on the filesystem
       """
       0
       """
+
+  Scenario: Invalid path specified
+    Given an empty directory
+
+    When I try `wp find foo`
+    Then STDERR should be:
+      """
+      Error: Invalid path specified.
+      """
