@@ -145,7 +145,7 @@ class Find_Command {
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
 		$this->start_time = microtime( true );
-		$this->log( "Searching for WordPress installs in {$path}" );
+		$this->log( "Searching for WordPress installs in '{$path}'" );
 		$this->recurse_directory( $this->base_path );
 		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth' ) );
 		$formatter->display_items( $this->found_wp );
@@ -167,7 +167,7 @@ class Find_Command {
 			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
 			foreach( $this->ignored_paths as $ignored_path ) {
 				if ( false !== stripos( $compared_path, $ignored_path ) ) {
-					$this->log( "Matched ignored path. Skipping recursion into {$path}" );
+					$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 					return;
 				}
 			}
@@ -183,19 +183,19 @@ class Find_Command {
 				'version'      => self::get_wp_version( $version_path ),
 				'depth'        => $this->current_depth - 1,
 			);
-			$this->log( "Found WordPress install at {$version_path}" );
+			$this->log( "Found WordPress install at '{$version_path}'" );
 			return;
 		}
 
 		// Ensure we haven't exceeded our max recursion depth
 		if ( false !== $this->max_depth && $this->current_depth > $this->max_depth ) {
-			$this->log( "Exceeded max depth. Skipping recursion into {$path}" );
+			$this->log( "Exceeded max depth. Skipping recursion into '{$path}'" );
 			return;
 		}
 
 		// Check all files and directories of this path to recurse
 		// into subdirectories.
-		$this->log( "Recusing into {$path}" );
+		$this->log( "Recusing into '{$path}'" );
 		$iterator = new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS );
 		foreach( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
