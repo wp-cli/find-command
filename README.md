@@ -10,7 +10,7 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 ## Using
 
 ~~~
-wp find <path> [--skip-ignored-paths] [--fields=<fields>] [--field=<field>] [--format=<format>] [--verbose]
+wp find <path> [--skip-ignored-paths] [--max_depth=<max-depth>] [--fields=<fields>] [--field=<field>] [--format=<format>] [--verbose]
 ~~~
 
 Recursively iterates subdirectories of provided `<path>` to find and
@@ -20,13 +20,16 @@ with a version.php file.
 Avoids recursing some known paths (e.g. node_modules) to significantly
 improve performance.
 
+Indicates depth at which the WordPress install was found, and its alias,
+if it has one.
+
 ```
 $ wp find ./
-+---------------------------------------------------------------------+---------------------+
-| version_path                                                        | version             |
-+---------------------------------------------------------------------+---------------------+
-| /Users/wpcli/projects/wordpress-develop/src/wp-includes/version.php | 4.8-alpha-39357-src |
-+---------------------------------------------------------------------+---------------------+
++--------------------------------------+---------------------+-------+--------+
+| version_path                         | version             | depth | alias  |
++--------------------------------------+---------------------+-------+--------+
+| /Users/wpcli/wp-includes/version.php | 4.8-alpha-39357-src | 2     | @wpcli |
++--------------------------------------+---------------------+-------+--------+
 ```
 
 **OPTIONS**
@@ -36,6 +39,9 @@ $ wp find ./
 
 	[--skip-ignored-paths]
 		Skip the paths that are ignored by default.
+
+	[--max_depth=<max-depth>]
+		Only recurse to a specified depth, inclusive.
 
 	[--fields=<fields>]
 		Limit the output to specific row fields.

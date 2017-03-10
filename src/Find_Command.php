@@ -102,13 +102,16 @@ class Find_Command {
 	 * Avoids recursing some known paths (e.g. node_modules) to significantly
 	 * improve performance.
 	 *
+	 * Indicates depth at which the WordPress install was found, and its alias,
+	 * if it has one.
+	 *
 	 * ```
 	 * $ wp find ./
-	 * +---------------------------------------------------------------------+---------------------+
-	 * | version_path                                                        | version             |
-	 * +---------------------------------------------------------------------+---------------------+
-	 * | /Users/wpcli/projects/wordpress-develop/src/wp-includes/version.php | 4.8-alpha-39357-src |
-	 * +---------------------------------------------------------------------+---------------------+
+	 * +--------------------------------------+---------------------+-------+--------+
+	 * | version_path                         | version             | depth | alias  |
+	 * +--------------------------------------+---------------------+-------+--------+
+	 * | /Users/wpcli/wp-includes/version.php | 4.8-alpha-39357-src | 2     | @wpcli |
+	 * +--------------------------------------+---------------------+-------+--------+
 	 * ```
 	 *
 	 * ## OPTIONS
