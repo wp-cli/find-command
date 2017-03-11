@@ -79,6 +79,13 @@ class Find_Command {
 	private $start_time = false;
 
 	/**
+	 * Resolved alias paths
+	 *
+	 * @var array
+	 */
+	private $resolved_aliases = array();
+
+	/**
 	 * Found WordPress installs.
 	 *
 	 * @var array
@@ -95,13 +102,16 @@ class Find_Command {
 	 * Avoids recursing some known paths (e.g. node_modules) to significantly
 	 * improve performance.
 	 *
+	 * Indicates depth at which the WordPress install was found, and its alias,
+	 * if it has one.
+	 *
 	 * ```
 	 * $ wp find ./
-	 * +---------------------------------------------------------------------+---------------------+
-	 * | version_path                                                        | version             |
-	 * +---------------------------------------------------------------------+---------------------+
-	 * | /Users/wpcli/projects/wordpress-develop/src/wp-includes/version.php | 4.8-alpha-39357-src |
-	 * +---------------------------------------------------------------------+---------------------+
+	 * +--------------------------------------+---------------------+-------+--------+
+	 * | version_path                         | version             | depth | alias  |
+	 * +--------------------------------------+---------------------+-------+--------+
+	 * | /Users/wpcli/wp-includes/version.php | 4.8-alpha-39357-src | 2     | @wpcli |
+	 * +--------------------------------------+---------------------+-------+--------+
 	 * ```
 	 *
 	 * ## OPTIONS
@@ -147,10 +157,19 @@ class Find_Command {
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
+
+		$aliases = WP_CLI::get_runner()->aliases;
+		foreach( $aliases as $alias => $target ) {
+			if ( empty( $target['path'] ) ) {
+				continue;
+			}
+			$this->resolved_aliases[ rtrim( $target['path'], '/' ) ] = $alias;
+		}
+
 		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installs in '{$path}'" );
 		$this->recurse_directory( $this->base_path );
-		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth' ) );
+		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth', 'alias' ) );
 		$formatter->display_items( $this->found_wp );
 	}
 
@@ -181,10 +200,13 @@ class Find_Command {
 		if ( '/wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
 			$version_path = $path . 'version.php';
+			$wp_path = substr( $path, 0, -13 );
+			$alias = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
 			$this->found_wp[ $version_path ] = array(
 				'version_path' => $version_path,
 				'version'      => self::get_wp_version( $version_path ),
 				'depth'        => $this->current_depth - 1,
+				'alias'        => $alias,
 			);
 			$this->log( "Found WordPress install at '{$version_path}'" );
 			return;

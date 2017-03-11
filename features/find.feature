@@ -161,3 +161,19 @@ Feature: Find WordPress installs on the filesystem
       """
       Error: Invalid path specified.
       """
+
+  Scenario: List aliases for directories if they exist
+    Given a WP install in 'subdir1'
+    And a WP install in 'subdir2'
+
+    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    Then save STDOUT as {TEST_DIR}
+
+    When I run `echo "@test1:\n  path: {TEST_DIR}/subdir2" > wp-cli.yml`
+    Then the return code should be 0
+
+    When I run `wp find {TEST_DIR} --fields=version_path,alias`
+    Then STDOUT should be a table containing rows:
+      | version_path                               | alias               |
+      | {TEST_DIR}/subdir1/wp-includes/version.php |                     |
+      | {TEST_DIR}/subdir2/wp-includes/version.php | @test1              |
