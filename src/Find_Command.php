@@ -169,6 +169,7 @@ class Find_Command {
 		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installs in '{$path}'" );
 		$this->recurse_directory( $this->base_path );
+		$this->log( "Finished search for WordPress installs in '{$path}'" );
 		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth', 'alias' ) );
 		$formatter->display_items( $this->found_wp );
 	}
