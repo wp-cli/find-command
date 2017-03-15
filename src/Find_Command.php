@@ -226,7 +226,7 @@ class Find_Command {
 			$this->log( "Exception thrown '{$e->getMessage()}'. Skipping recursion into '{$path}'" );
 			return;
 		}
-		$this->log( "Recusing into '{$path}'" );
+		$this->log( "Recursing into '{$path}'" );
 		foreach( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
 				$this->current_depth++;
