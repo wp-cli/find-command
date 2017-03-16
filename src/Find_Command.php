@@ -11,10 +11,6 @@ class Find_Command {
 	 */
 	private $ignored_paths = array(
 		// System directories
-		'/.ssh/',
-		'/.git/',
-		'/.svn/',
-		'/.subversion/',
 		'/__MACOSX/',
 		// Webserver directories
 		'/cache/',
@@ -101,8 +97,8 @@ class Find_Command {
 	 * report WordPress installs. A WordPress install is a wp-includes directory
 	 * with a version.php file.
 	 *
-	 * Avoids recursing some known paths (e.g. node_modules) to significantly
-	 * improve performance.
+	 * Avoids recursing some known paths (e.g. /node_modules/, hidden sys dirs)
+	 * to significantly improve performance.
 	 *
 	 * Indicates depth at which the WordPress install was found, and its alias,
 	 * if it has one.
@@ -190,6 +186,11 @@ class Find_Command {
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
 			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
+			// Ignore all hidden system directories
+			if ( '/.' === substr( $compared_path, 0, 2 ) ) {
+				$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
+				return;
+			}
 			foreach( $this->ignored_paths as $ignored_path ) {
 				if ( false !== stripos( $compared_path, $ignored_path ) ) {
 					$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
