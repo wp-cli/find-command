@@ -17,8 +17,8 @@ Recursively iterates subdirectories of provided `<path>` to find and
 report WordPress installs. A WordPress install is a wp-includes directory
 with a version.php file.
 
-Avoids recursing some known paths (e.g. node_modules) to significantly
-improve performance.
+Avoids recursing some known paths (e.g. /node_modules/, hidden sys dirs)
+to significantly improve performance.
 
 Indicates depth at which the WordPress install was found, and its alias,
 if it has one.

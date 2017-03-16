@@ -177,3 +177,22 @@ Feature: Find WordPress installs on the filesystem
       | version_path                               | alias               |
       | {TEST_DIR}/subdir1/wp-includes/version.php |                     |
       | {TEST_DIR}/subdir2/wp-includes/version.php | @test1              |
+
+  Scenario: Ignore hidden directories by default
+    Given a WP install in 'subdir1'
+    And a WP install in '.svn'
+
+    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    Then save STDOUT as {TEST_DIR}
+
+    When I run `wp find {TEST_DIR} --format=count`
+    Then STDOUT should be:
+      """
+      1
+      """
+
+    When I run `wp find {TEST_DIR} --skip-ignored-paths --format=count`
+    Then STDOUT should be:
+      """
+      2
+      """
