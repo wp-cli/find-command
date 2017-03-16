@@ -27,6 +27,8 @@ class Find_Command {
 		'/themes/',
 		'/plugins/',
 		'/modules/',
+		// Other applications
+		'/owncloud/',
 		// Dependency management
 		'/node_modules/',
 		'/bower_components/',
