@@ -14,21 +14,34 @@ class Find_Command {
 		'/__MACOSX/',
 		// Webserver directories
 		'/cache/',
+		'/caches/',
 		'/logs/',
 		'/debuglogs/',
 		'/Maildir/',
 		'/tmp/',
 		// Generic application directories
+		'/data/',
 		'/uploads/',
 		'/themes/',
 		'/plugins/',
 		'/modules/',
+		'/assets/',
+		'/js/',
+		'/pdf/',
+		'/releases/',
+		'/filestore/',
+		// Backup directories
+		'/backup/',
+		'/backups/',
+		'/mysql_backups/',
+		'/updater_backup/',
 		// Other applications
 		'/owncloud/',
 		// Dependency management
 		'/node_modules/',
 		'/bower_components/',
 		'/vendor/',
+		'/svn/',
 		// Already in a WordPress install
 		'/wp-admin/',
 		'/wp-content/',
