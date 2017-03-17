@@ -10,7 +10,7 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 ## Using
 
 ~~~
-wp find <path> [--skip-ignored-paths] [--max_depth=<max-depth>] [--fields=<fields>] [--field=<field>] [--format=<format>] [--verbose]
+wp find <path> [--skip-ignored-paths] [--include_ignored_paths=<paths>] [--max_depth=<max-depth>] [--fields=<fields>] [--field=<field>] [--format=<format>] [--verbose]
 ~~~
 
 Recursively iterates subdirectories of provided `<path>` to find and
@@ -39,6 +39,9 @@ $ wp find ./
 
 	[--skip-ignored-paths]
 		Skip the paths that are ignored by default.
+
+	[--include_ignored_paths=<paths>]
+		Include additional ignored paths as CSV (e.g. '/sys-backup/,/temp/').
 
 	[--max_depth=<max-depth>]
 		Only recurse to a specified depth, inclusive.
