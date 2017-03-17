@@ -42,6 +42,8 @@ class Find_Command {
 		'/bower_components/',
 		'/vendor/',
 		'/svn/',
+		// Directory for a common script kiddie hack
+		'/coockies/',
 		// Already in a WordPress install
 		'/wp-admin/',
 		'/wp-content/',
