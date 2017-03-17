@@ -141,6 +141,9 @@ class Find_Command {
 	 * [--skip-ignored-paths]
 	 * : Skip the paths that are ignored by default.
 	 *
+	 * [--include_ignored_paths=<paths>]
+	 * : Include additional ignored paths as CSV (e.g. '/sys-backup/,/temp/').
+	 *
 	 * [--max_depth=<max-depth>]
 	 * : Only recurse to a specified depth, inclusive.
 	 *
@@ -174,6 +177,9 @@ class Find_Command {
 			WP_CLI::error( 'Invalid path specified.' );
 		}
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
+		if ( ! empty( $assoc_args['include_ignored_paths'] ) ) {
+			$this->ignored_paths = array_merge( $this->ignored_paths, explode( ',', $assoc_args['include_ignored_paths'] ) );
+		}
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
 		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
 
