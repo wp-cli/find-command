@@ -200,7 +200,9 @@ class Find_Command {
 			// Assume base path doesn't need comparison
 			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
 			// Ignore all hidden system directories
-			if ( '/.' === substr( $compared_path, 0, 2 ) ) {
+			$bits = explode( '/', trim( $compared_path, '/' ) );
+			$current_dir = array_pop( $bits );
+			if ( $current_dir && '.' === $current_dir[0] ) {
 				$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 				return;
 			}

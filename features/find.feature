@@ -181,6 +181,8 @@ Feature: Find WordPress installs on the filesystem
   Scenario: Ignore hidden directories by default
     Given a WP install in 'subdir1'
     And a WP install in '.svn'
+    And I run `mkdir -p subdir2/.svn`
+    And a WP install in 'subdir2/.svn/wp-install'
 
     When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
     Then save STDOUT as {TEST_DIR}
@@ -194,5 +196,5 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --skip-ignored-paths --format=count`
     Then STDOUT should be:
       """
-      2
+      3
       """
