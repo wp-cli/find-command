@@ -6,6 +6,7 @@
     "license": "MIT",
     "authors": [],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {"": "src/"},
         "files": [ "find-command.php" ]
@@ -15,6 +16,9 @@
         "behat/behat": "~2.5"
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
         "commands": [
             "find"
         ]
