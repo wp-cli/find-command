@@ -7,7 +7,7 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
     Then save STDOUT as {TEST_DIR}
 
-    When I run `wp find {TEST_DIR} --field=version_path`
+    When I run `wp find {TEST_DIR} --field=version_path | sort`
     Then STDOUT should be:
       """
       {TEST_DIR}/subdir1/wp-includes/version.php
