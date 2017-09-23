@@ -238,6 +238,7 @@ class Find_Command {
 			$this->found_wp[ $version_path ] = array(
 				'version_path' => $version_path,
 				'version'      => self::get_wp_version( $version_path ),
+				'wp_path'      => str_replace( 'wp-includes/version.php', '', $version_path ),
 				'depth'        => $this->current_depth - 1,
 				'alias'        => $alias,
 			);
