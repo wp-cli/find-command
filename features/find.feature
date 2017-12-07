@@ -17,11 +17,11 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --field=version_path --verbose`
     Then STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir1/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir1/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir2/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir2/wp-includes/version.php'
       """
 
     When I run `wp find {TEST_DIR} --format=count`
@@ -41,11 +41,11 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --field=version_path --verbose`
     Then STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir1/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir1/wp-includes/version.php'
       """
     And STDOUT should not contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir2/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir2/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
@@ -80,15 +80,15 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --verbose`
     Then STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir1/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir1/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/sub/subdir2/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/sub/subdir2/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/sub/sub/subdir3/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/sub/sub/subdir3/wp-includes/version.php'
       """
 
     When I run `wp find {TEST_DIR} --format=count`
@@ -100,11 +100,11 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --verbose --max_depth=2`
     Then STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir1/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir1/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/sub/subdir2/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/sub/subdir2/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
@@ -120,7 +120,7 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp find {TEST_DIR} --verbose --max_depth=1`
     Then STDOUT should contain:
       """
-      Found WordPress install at '{TEST_DIR}/subdir1/wp-includes/version.php'
+      Found WordPress installation at '{TEST_DIR}/subdir1/wp-includes/version.php'
       """
     And STDOUT should contain:
       """
