@@ -1,6 +1,6 @@
 {
     "name": "wp-cli/find-command",
-    "description": "Find WordPress installs on the filesystem.",
+    "description": "Find WordPress installations on the filesystem.",
     "type": "wp-cli-package",
     "homepage": "https://github.com/wp-cli/finder-command",
     "license": "MIT",

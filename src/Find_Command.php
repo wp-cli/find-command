@@ -105,24 +105,24 @@ class Find_Command {
 	private $resolved_aliases = array();
 
 	/**
-	 * Found WordPress installs.
+	 * Found WordPress installations.
 	 *
 	 * @var array
 	 */
 	private $found_wp = array();
 
 	/**
-	 * Find WordPress installs on the filesystem.
+	 * Find WordPress installations on the filesystem.
 	 *
 	 * Recursively iterates subdirectories of provided `<path>` to find and
-	 * report WordPress installs. A WordPress install is a wp-includes directory
-	 * with a version.php file.
+	 * report WordPress installations. A WordPress installation is a wp-includes
+	 * directory with a version.php file.
 	 *
 	 * Avoids recursing some known paths (e.g. /node_modules/, hidden sys dirs)
 	 * to significantly improve performance.
 	 *
-	 * Indicates depth at which the WordPress install was found, and its alias,
-	 * if it has one.
+	 * Indicates depth at which the WordPress installations was found, and its
+	 * alias, if it has one.
 	 *
 	 * ```
 	 * $ wp find ./
@@ -192,9 +192,9 @@ class Find_Command {
 		}
 
 		$this->start_time = microtime( true );
-		$this->log( "Searching for WordPress installs in '{$path}'" );
+		$this->log( "Searching for WordPress installations in '{$path}'" );
 		$this->recurse_directory( $this->base_path );
-		$this->log( "Finished search for WordPress installs in '{$path}'" );
+		$this->log( "Finished search for WordPress installations in '{$path}'" );
 		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth', 'alias' ) );
 		$formatter->display_items( $this->found_wp );
 	}
@@ -209,7 +209,7 @@ class Find_Command {
 		// Provide consistent trailing slashes to all paths
 		$path = rtrim( $path, '/' ) . '/';
 
-		// Don't recurse directories that probably don't have a WordPress install.
+		// Don't recurse directories that probably don't have a WordPress installation.
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
 			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
@@ -242,7 +242,7 @@ class Find_Command {
 				'depth'        => $this->current_depth - 1,
 				'alias'        => $alias,
 			);
-			$this->log( "Found WordPress install at '{$version_path}'" );
+			$this->log( "Found WordPress installation at '{$version_path}'" );
 			return;
 		}
 
@@ -271,7 +271,7 @@ class Find_Command {
 	}
 
 	/**
-	 * Get the WordPress version for the install, without executing the file.
+	 * Get the WordPress version for the installation, without executing the file.
 	 */
 	private static function get_wp_version( $path ) {
 		$contents = file_get_contents( $path );
