@@ -133,6 +133,19 @@ class Find_Command {
 	 * +--------------------------------------+---------------------+-------+--------+
 	 * ```
 	 *
+	 * ## AVAILABLE FIELDS
+	 *
+	 * These fields will be displayed by default for each installation:
+	 *
+	 * * version_path - Path to the version.php file.
+	 * * version - WordPress version.
+	 * * depth - Directory depth at which the installation was found.
+	 * * alias - WP-CLI alias, if one is registered.
+	 *
+	 * These fields are optionally available:
+	 *
+	 * * wp_path - Path that can be passed to `--path=<path>` global parameter.
+	 *
 	 * ## OPTIONS
 	 *
 	 * <path>
