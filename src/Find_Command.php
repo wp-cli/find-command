@@ -184,7 +184,7 @@ class Find_Command {
 	 * @when before_wp_load
 	 */
 	public function __invoke( $args, $assoc_args ) {
-		list( $path ) = $args;
+		list( $path )    = $args;
 		$this->base_path = realpath( $path );
 		if ( ! $this->base_path ) {
 			WP_CLI::error( 'Invalid path specified.' );
@@ -194,10 +194,10 @@ class Find_Command {
 			$this->ignored_paths = array_merge( $this->ignored_paths, explode( ',', $assoc_args['include_ignored_paths'] ) );
 		}
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
-		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
+		$this->verbose   = Utils\get_flag_value( $assoc_args, 'verbose' );
 
 		$aliases = WP_CLI::get_runner()->aliases;
-		foreach( $aliases as $alias => $target ) {
+		foreach ( $aliases as $alias => $target ) {
 			if ( empty( $target['path'] ) ) {
 				continue;
 			}
@@ -227,13 +227,13 @@ class Find_Command {
 			// Assume base path doesn't need comparison
 			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
 			// Ignore all hidden system directories
-			$bits = explode( '/', trim( $compared_path, '/' ) );
+			$bits        = explode( '/', trim( $compared_path, '/' ) );
 			$current_dir = array_pop( $bits );
 			if ( $current_dir && '.' === $current_dir[0] ) {
 				$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 				return;
 			}
-			foreach( $this->ignored_paths as $ignored_path ) {
+			foreach ( $this->ignored_paths as $ignored_path ) {
 				if ( false !== stripos( $compared_path, $ignored_path ) ) {
 					$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 					return;
@@ -245,9 +245,9 @@ class Find_Command {
 		// version.php file.
 		if ( '/wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
-			$version_path = $path . 'version.php';
-			$wp_path = substr( $path, 0, -13 );
-			$alias = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
+			$version_path                    = $path . 'version.php';
+			$wp_path                         = substr( $path, 0, -13 );
+			$alias                           = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
 			$this->found_wp[ $version_path ] = array(
 				'version_path' => $version_path,
 				'version'      => self::get_wp_version( $version_path ),
@@ -269,12 +269,12 @@ class Find_Command {
 		// into subdirectories.
 		try {
 			$iterator = new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->log( "Exception thrown '{$e->getMessage()}'. Skipping recursion into '{$path}'" );
 			return;
 		}
 		$this->log( "Recursing into '{$path}'" );
-		foreach( $iterator as $file_info ) {
+		foreach ( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
 				$this->current_depth++;
 				$this->recurse_directory( $file_info->getPathname() );
@@ -288,7 +288,7 @@ class Find_Command {
 	 */
 	private static function get_wp_version( $path ) {
 		$contents = file_get_contents( $path );
-		preg_match( '#\$wp_version\s?=\s?[\'"]([^\'"]+)[\'"]#' , $contents, $matches );
+		preg_match( '#\$wp_version\s?=\s?[\'"]([^\'"]+)[\'"]#', $contents, $matches );
 		return ! empty( $matches[1] ) ? $matches[1] : '';
 	}
 
@@ -309,9 +309,9 @@ class Find_Command {
 	 * @return string
 	 */
 	private static function format_log_timestamp( $s ) {
-		$h = floor( $s / 3600 );
+		$h  = floor( $s / 3600 );
 		$s -= $h * 3600;
-		$m = floor( $s / 60 );
+		$m  = floor( $s / 60 );
 		$s -= $m * 60;
 		return $h . ':' . sprintf( '%02d', $m ) . ':' . sprintf( '%02d', $s );
 	}
