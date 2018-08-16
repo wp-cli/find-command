@@ -145,6 +145,9 @@ class Find_Command {
 	 * These fields are optionally available:
 	 *
 	 * * wp_path - Path that can be passed to `--path=<path>` global parameter.
+	 * * db_host - Host name for the database.
+	 * * db_user - User name for the database.
+	 * * db_name - Database name for the database.
 	 *
 	 * ## OPTIONS
 	 *
@@ -204,11 +207,16 @@ class Find_Command {
 			$this->resolved_aliases[ rtrim( $target['path'], '/' ) ] = $alias;
 		}
 
+		$fields = array( 'version_path', 'version', 'depth', 'alias' );
+		if ( ! empty( $assoc_args['fields'] ) ) {
+			$fields = explode( ',', $assoc_args['fields'] );
+		}
+
 		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installations in '{$path}'" );
 		$this->recurse_directory( $this->base_path );
 		$this->log( "Finished search for WordPress installations in '{$path}'" );
-		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth', 'alias' ) );
+		$formatter = new \WP_CLI\Formatter( $assoc_args, $fields );
 		$formatter->display_items( $this->found_wp );
 	}
 
@@ -245,16 +253,41 @@ class Find_Command {
 		// version.php file.
 		if ( '/wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
-			$version_path                    = $path . 'version.php';
-			$wp_path                         = substr( $path, 0, -13 );
-			$alias                           = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
+			$version_path = $path . 'version.php';
+			$wp_path      = substr( $path, 0, -13 );
+			$alias        = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
+			$wp_path      = rtrim( $wp_path, '/' ) . '/';
+
 			$this->found_wp[ $version_path ] = array(
 				'version_path' => $version_path,
 				'version'      => self::get_wp_version( $version_path ),
-				'wp_path'      => str_replace( 'wp-includes/version.php', '', $version_path ),
+				'wp_path'      => rtrim( $wp_path, '/' ) . '/',
 				'depth'        => $this->current_depth - 1,
 				'alias'        => $alias,
+				'db_host'      => '',
+				'db_name'      => '',
+				'db_user'      => '',
 			);
+
+			$config_path = self::get_wp_config_path( $wp_path );
+			if ( $config_path ) {
+				try {
+					$transformer = new WPConfigTransformer( $config_path );
+					foreach ( array( 'db_host', 'db_name', 'db_user' ) as $constant ) {
+						$value = $transformer->get_value( 'constant', strtoupper( $constant ) );
+						// Clean up strings.
+						$first = substr( $value, 0, 1 );
+						$last  = substr( $value, -1 );
+						$both  = array_unique( array( $first, $last ) );
+						if ( in_array( $both, array( array( '"' ), array( "'" ) ), true ) ) {
+							$value = substr( $value, 1, -1 );
+						}
+						$this->found_wp[ $version_path ][ $constant ] = $value;
+					}
+				} catch ( \Exception $e ) {
+					$this->log( "Could not process the 'wp-config.php' transformation: " . $exception->getMessage() );
+				}
+			}
 			$this->log( "Found WordPress installation at '{$version_path}'" );
 			return;
 		}
@@ -290,6 +323,25 @@ class Find_Command {
 		$contents = file_get_contents( $path );
 		preg_match( '#\$wp_version\s?=\s?[\'"]([^\'"]+)[\'"]#', $contents, $matches );
 		return ! empty( $matches[1] ) ? $matches[1] : '';
+	}
+
+	/**
+	 * Get the wp-config.php path for the installation.
+	 *
+	 * Adapted from WP_CLI\Utils\locate_wp_config()
+	 */
+	private static function get_wp_config_path( $installation_dir ) {
+		$path = false;
+		if ( file_exists( $installation_dir . 'wp-config.php' ) ) {
+			$path = $installation_dir . 'wp-config.php';
+		} elseif ( file_exists( $installation_dir . '../wp-config.php' ) && ! file_exists( $installation_dir . '/../wp-settings.php' ) ) {
+			$path = $installation_dir . '../wp-config.php';
+		}
+
+		if ( $path ) {
+			$path = realpath( $path );
+		}
+		return $path;
 	}
 
 	/**

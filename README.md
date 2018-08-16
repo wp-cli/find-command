@@ -44,6 +44,9 @@ These fields will be displayed by default for each installation:
 These fields are optionally available:
 
 * wp_path - Path that can be passed to `--path=<path>` global parameter.
+* db_host - Host name for the database.
+* db_user - User name for the database.
+* db_name - Database name for the database.
 
 **OPTIONS**
 
@@ -82,7 +85,7 @@ These fields are optionally available:
 
 ## Installing
 
-Installing this package requires WP-CLI's latest stable release. Update to the latest stable release with `wp cli update`.
+Installing this package requires WP-CLI 2 or greater. Update to the latest stable release with `wp cli update`.
 
 Once you've done so, you can install this package with:
 
