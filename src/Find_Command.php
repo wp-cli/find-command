@@ -268,6 +268,7 @@ class Find_Command {
 				'db_name'      => '',
 				'db_user'      => '',
 			);
+
 			$config_path = self::get_wp_config_path( $wp_path );
 			if ( $config_path ) {
 				try {
