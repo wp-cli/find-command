@@ -284,7 +284,7 @@ class Find_Command {
 						}
 						$this->found_wp[ $version_path ][ $constant ] = $value;
 					}
-				} catch ( \Exception $e ) {
+				} catch ( Exception $exception ) {
 					$this->log( "Could not process the 'wp-config.php' transformation: " . $e->getMessage() );
 				}
 			}
