@@ -285,7 +285,7 @@ class Find_Command {
 						$this->found_wp[ $version_path ][ $constant ] = $value;
 					}
 				} catch ( \Exception $e ) {
-					$this->log( "Could not process the 'wp-config.php' transformation: " . $exception->getMessage() );
+					$this->log( "Could not process the 'wp-config.php' transformation: " . $e->getMessage() );
 				}
 			}
 			$this->log( "Found WordPress installation at '{$version_path}'" );
