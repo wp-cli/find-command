@@ -114,7 +114,7 @@ class Find_Command {
 	/**
 	 * Find WordPress installations on the filesystem.
 	 *
-	 * Recursively iterates subdirectories of provided `<path>` to find and
+	 * Recursively iterates subdirectories of provided <path> to find and
 	 * report WordPress installations. A WordPress installation is a wp-includes
 	 * directory with a version.php file.
 	 *
