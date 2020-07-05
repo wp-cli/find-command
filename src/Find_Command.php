@@ -234,7 +234,7 @@ class Find_Command {
 		// Don't recurse directories that probably don't have a WordPress installation.
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
-			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path, '/' ) . '#', '', $path );
+			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#', '', $path );
 			// Ignore all hidden system directories
 			$bits        = explode( '/', trim( $compared_path, '/' ) );
 			$current_dir = array_pop( $bits );
