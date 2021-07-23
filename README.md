@@ -3,7 +3,7 @@ wp-cli/find-command
 
 Find WordPress installations on the filesystem.
 
-[![Build Status](https://travis-ci.org/wp-cli/find-command.svg?branch=master)](https://travis-ci.org/wp-cli/find-command)
+[![Testing](https://github.com/wp-cli/find-command/actions/workflows/testing.yml/badge.svg)](https://github.com/wp-cli/find-command/actions/workflows/testing.yml) [![Build Status](https://travis-ci.org/wp-cli/find-command.svg?branch=master)](https://travis-ci.org/wp-cli/find-command)
 
 Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contributing) | [Support](#support)
 
