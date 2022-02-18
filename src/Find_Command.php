@@ -243,7 +243,7 @@ class Find_Command {
 
 		// This looks like a wp-includes directory, so check if it has a
 		// version.php file.
-		if ( '/wp-includes/' === substr( $path, -13 )
+		if ( DIRECTORY_SEPARATOR . 'wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
 			$version_path = $path . 'version.php';
 			$wp_path = substr( $path, 0, -13 );
