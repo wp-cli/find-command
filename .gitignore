@@ -5,3 +5,7 @@ vendor/
 *.zip
 *.tar.gz
 composer.lock
+*.log
+phpunit.xml
+phpcs.xml
+.phpcs.xml

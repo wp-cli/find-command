@@ -1,6 +1,7 @@
 <?php
 
 use WP_CLI\Utils;
+use WP_CLI\Formatter;
 
 class Find_Command {
 
@@ -9,7 +10,7 @@ class Find_Command {
 	 *
 	 * @var array
 	 */
-	private $ignored_paths = array(
+	private $ignored_paths = [
 		// System directories
 		'__MACOSX/',
 		// Webserver directories
@@ -53,7 +54,7 @@ class Find_Command {
 		// Already in a WordPress install
 		'wp-admin/',
 		'wp-content/',
-	);
+	];
 
 	/**
 	 * Beginning of the recursion path.
@@ -102,19 +103,19 @@ class Find_Command {
 	 *
 	 * @var array
 	 */
-	private $resolved_aliases = array();
+	private $resolved_aliases = [];
 
 	/**
 	 * Found WordPress installations.
 	 *
 	 * @var array
 	 */
-	private $found_wp = array();
+	private $found_wp = [];
 
 	/**
 	 * Find WordPress installations on the filesystem.
 	 *
-	 * Recursively iterates subdirectories of provided `<path>` to find and
+	 * Recursively iterates subdirectories of provided <path> to find and
 	 * report WordPress installations. A WordPress installation is a wp-includes
 	 * directory with a version.php file.
 	 *
@@ -145,6 +146,9 @@ class Find_Command {
 	 * These fields are optionally available:
 	 *
 	 * * wp_path - Path that can be passed to `--path=<path>` global parameter.
+	 * * db_host - Host name for the database.
+	 * * db_user - User name for the database.
+	 * * db_name - Database name for the database.
 	 *
 	 * ## OPTIONS
 	 *
@@ -184,7 +188,7 @@ class Find_Command {
 	 * @when before_wp_load
 	 */
 	public function __invoke( $args, $assoc_args ) {
-		list( $path ) = $args;
+		list( $path )    = $args;
 		$this->base_path = realpath( $path );
 		if ( ! $this->base_path ) {
 			WP_CLI::error( 'Invalid path specified.' );
@@ -194,21 +198,26 @@ class Find_Command {
 			$this->ignored_paths = array_merge( $this->ignored_paths, explode( ',', $assoc_args['include_ignored_paths'] ) );
 		}
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
-		$this->verbose = Utils\get_flag_value( $assoc_args, 'verbose' );
+		$this->verbose   = Utils\get_flag_value( $assoc_args, 'verbose' );
 
 		$aliases = WP_CLI::get_runner()->aliases;
-		foreach( $aliases as $alias => $target ) {
+		foreach ( $aliases as $alias => $target ) {
 			if ( empty( $target['path'] ) ) {
 				continue;
 			}
 			$this->resolved_aliases[ rtrim( $target['path'], '/' ) ] = $alias;
 		}
 
+		$fields = [ 'version_path', 'version', 'depth', 'alias' ];
+		if ( ! empty( $assoc_args['fields'] ) ) {
+			$fields = explode( ',', $assoc_args['fields'] );
+		}
+
 		$this->start_time = microtime( true );
 		$this->log( "Searching for WordPress installations in '{$path}'" );
 		$this->recurse_directory( $this->base_path );
 		$this->log( "Finished search for WordPress installations in '{$path}'" );
-		$formatter = new \WP_CLI\Formatter( $assoc_args, array( 'version_path', 'version', 'depth', 'alias' ) );
+		$formatter = new Formatter( $assoc_args, $fields );
 		$formatter->display_items( $this->found_wp );
 	}
 
@@ -225,15 +234,15 @@ class Find_Command {
 		// Don't recurse directories that probably don't have a WordPress installation.
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
-			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path ) . '#', '', $path );
+			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#', '', $path );
 			// Ignore all hidden system directories
-			$bits = explode( '/', trim( $compared_path, '/' ) );
+			$bits        = explode( '/', trim( $compared_path, '/' ) );
 			$current_dir = array_pop( $bits );
 			if ( $current_dir && '.' === $current_dir[0] ) {
 				$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 				return;
 			}
-			foreach( $this->ignored_paths as $ignored_path ) {
+			foreach ( $this->ignored_paths as $ignored_path ) {
 				if ( false !== stripos( $compared_path, $ignored_path ) ) {
 					$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 					return;
@@ -246,15 +255,40 @@ class Find_Command {
 		if ( DIRECTORY_SEPARATOR . 'wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
 			$version_path = $path . 'version.php';
-			$wp_path = substr( $path, 0, -13 );
-			$alias = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
-			$this->found_wp[ $version_path ] = array(
+			$wp_path      = substr( $path, 0, -13 );
+			$alias        = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
+			$wp_path      = rtrim( $wp_path, '/' ) . '/';
+
+			$this->found_wp[ $version_path ] = [
 				'version_path' => $version_path,
 				'version'      => self::get_wp_version( $version_path ),
-				'wp_path'      => str_replace( 'wp-includes/version.php', '', $version_path ),
+				'wp_path'      => rtrim( $wp_path, '/' ) . '/',
 				'depth'        => $this->current_depth - 1,
 				'alias'        => $alias,
-			);
+				'db_host'      => '',
+				'db_name'      => '',
+				'db_user'      => '',
+			];
+
+			$config_path = self::get_wp_config_path( $wp_path );
+			if ( $config_path ) {
+				try {
+					$transformer = new WPConfigTransformer( $config_path );
+					foreach ( [ 'db_host', 'db_name', 'db_user' ] as $constant ) {
+						$value = $transformer->get_value( 'constant', strtoupper( $constant ) );
+						// Clean up strings.
+						$first = substr( $value, 0, 1 );
+						$last  = substr( $value, -1 );
+						$both  = array_unique( [ $first, $last ] );
+						if ( in_array( $both, [ [ '"' ], [ "'" ] ], true ) ) {
+							$value = substr( $value, 1, -1 );
+						}
+						$this->found_wp[ $version_path ][ $constant ] = $value;
+					}
+				} catch ( Exception $exception ) {
+					$this->log( "Could not process the 'wp-config.php' transformation: {$exception->getMessage()}" );
+				}
+			}
 			$this->log( "Found WordPress installation at '{$version_path}'" );
 			return;
 		}
@@ -269,12 +303,12 @@ class Find_Command {
 		// into subdirectories.
 		try {
 			$iterator = new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->log( "Exception thrown '{$e->getMessage()}'. Skipping recursion into '{$path}'" );
 			return;
 		}
 		$this->log( "Recursing into '{$path}'" );
-		foreach( $iterator as $file_info ) {
+		foreach ( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
 				$this->current_depth++;
 				$this->recurse_directory( $file_info->getPathname() );
@@ -288,8 +322,27 @@ class Find_Command {
 	 */
 	private static function get_wp_version( $path ) {
 		$contents = file_get_contents( $path );
-		preg_match( '#\$wp_version\s?=\s?[\'"]([^\'"]+)[\'"]#' , $contents, $matches );
+		preg_match( '#\$wp_version\s?=\s?[\'"]([^\'"]+)[\'"]#', $contents, $matches );
 		return ! empty( $matches[1] ) ? $matches[1] : '';
+	}
+
+	/**
+	 * Get the wp-config.php path for the installation.
+	 *
+	 * Adapted from WP_CLI\Utils\locate_wp_config()
+	 */
+	private static function get_wp_config_path( $installation_dir ) {
+		$path = false;
+		if ( file_exists( $installation_dir . 'wp-config.php' ) ) {
+			$path = $installation_dir . 'wp-config.php';
+		} elseif ( file_exists( $installation_dir . '../wp-config.php' ) && ! file_exists( $installation_dir . '/../wp-settings.php' ) ) {
+			$path = $installation_dir . '../wp-config.php';
+		}
+
+		if ( $path ) {
+			$path = realpath( $path );
+		}
+		return $path;
 	}
 
 	/**
@@ -309,9 +362,9 @@ class Find_Command {
 	 * @return string
 	 */
 	private static function format_log_timestamp( $s ) {
-		$h = floor( $s / 3600 );
+		$h  = floor( $s / 3600 );
 		$s -= $h * 3600;
-		$m = floor( $s / 60 );
+		$m  = floor( $s / 60 );
 		$s -= $m * 60;
 		return $h . ':' . sprintf( '%02d', $m ) . ':' . sprintf( '%02d', $s );
 	}

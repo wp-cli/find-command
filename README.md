@@ -3,7 +3,7 @@ wp-cli/find-command
 
 Find WordPress installations on the filesystem.
 
-[![Build Status](https://travis-ci.org/wp-cli/find-command.svg?branch=master)](https://travis-ci.org/wp-cli/find-command)
+[![Testing](https://github.com/wp-cli/find-command/actions/workflows/testing.yml/badge.svg)](https://github.com/wp-cli/find-command/actions/workflows/testing.yml) [![Build Status](https://travis-ci.org/wp-cli/find-command.svg?branch=master)](https://travis-ci.org/wp-cli/find-command)
 
 Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contributing) | [Support](#support)
 
@@ -13,7 +13,7 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 wp find <path> [--skip-ignored-paths] [--include_ignored_paths=<paths>] [--max_depth=<max-depth>] [--fields=<fields>] [--field=<field>] [--format=<format>] [--verbose]
 ~~~
 
-Recursively iterates subdirectories of provided `<path>` to find and
+Recursively iterates subdirectories of provided <path> to find and
 report WordPress installations. A WordPress installation is a wp-includes
 directory with a version.php file.
 
@@ -44,6 +44,9 @@ These fields will be displayed by default for each installation:
 These fields are optionally available:
 
 * wp_path - Path that can be passed to `--path=<path>` global parameter.
+* db_host - Host name for the database.
+* db_user - User name for the database.
+* db_name - Database name for the database.
 
 **OPTIONS**
 
@@ -82,11 +85,19 @@ These fields are optionally available:
 
 ## Installing
 
-Installing this package requires WP-CLI's latest stable release. Update to the latest stable release with `wp cli update`.
+Installing this package requires WP-CLI v2 or greater. Update to the latest stable release with `wp cli update`.
 
-Once you've done so, you can install this package with:
+Once you've done so, you can install the latest stable version of this package with:
 
-    wp package install git@github.com:wp-cli/find-command.git
+```bash
+wp package install wp-cli/find-command:@stable
+```
+
+To install the latest development version of this package, use the following command instead:
+
+```bash
+wp package install wp-cli/find-command:dev-master
+```
 
 ## Contributing
 
@@ -112,7 +123,7 @@ Once you've decided to commit the time to seeing your pull request through, [ple
 
 ## Support
 
-Github issues aren't for general support questions, but there are other venues you can try: https://wp-cli.org/#support
+GitHub issues aren't for general support questions, but there are other venues you can try: https://wp-cli.org/#support
 
 
 *This README.md is generated dynamically from the project's codebase using `wp scaffold package-readme` ([doc](https://github.com/wp-cli/scaffold-package-command#wp-scaffold-package-readme)). To suggest changes, please submit a pull request against the corresponding part of the codebase.*
