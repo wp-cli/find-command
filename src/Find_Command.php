@@ -12,48 +12,48 @@ class Find_Command {
 	 */
 	private $ignored_paths = [
 		// System directories
-		'/__MACOSX/',
+		'__MACOSX/',
 		// Webserver directories
-		'/cache/',
-		'/caches/',
-		'/logs/',
-		'/debuglogs/',
-		'/Maildir/',
-		'/tmp/',
+		'cache/',
+		'caches/',
+		'logs/',
+		'debuglogs/',
+		'Maildir/',
+		'tmp/',
 		// Generic application directories
-		'/configs/',
-		'/config/',
-		'/data/',
-		'/uploads/',
-		'/themes/',
-		'/plugins/',
-		'/modules/',
-		'/assets/',
-		'/thumbs/',
-		'/thumb/',
-		'/albums/',
-		'/attachments/',
-		'/js/',
-		'/pdf/',
-		'/releases/',
-		'/filestore/',
+		'configs/',
+		'config/',
+		'data/',
+		'uploads/',
+		'themes/',
+		'plugins/',
+		'modules/',
+		'assets/',
+		'thumbs/',
+		'thumb/',
+		'albums/',
+		'attachments/',
+		'js/',
+		'pdf/',
+		'releases/',
+		'filestore/',
 		// Backup directories
-		'/backup/',
-		'/backups/',
-		'/mysql_backups/',
-		'/updater_backup/',
+		'backup/',
+		'backups/',
+		'mysql_backups/',
+		'updater_backup/',
 		// Other applications
-		'/owncloud/',
+		'owncloud/',
 		// Dependency management
-		'/node_modules/',
-		'/bower_components/',
-		'/vendor/',
-		'/svn/',
+		'node_modules/',
+		'bower_components/',
+		'vendor/',
+		'svn/',
 		// Directory for a common script kiddie hack
-		'/coockies/',
+		'coockies/',
 		// Already in a WordPress install
-		'/wp-admin/',
-		'/wp-content/',
+		'wp-admin/',
+		'wp-content/',
 	];
 
 	/**
@@ -252,7 +252,7 @@ class Find_Command {
 
 		// This looks like a wp-includes directory, so check if it has a
 		// version.php file.
-		if ( '/wp-includes/' === substr( $path, -13 )
+		if ( DIRECTORY_SEPARATOR . 'wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
 			$version_path = $path . 'version.php';
 			$wp_path      = substr( $path, 0, -13 );
