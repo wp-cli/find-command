@@ -8,7 +8,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "psr-4": {"": "src/"},
+        "classmap": [
+            "src/"
+        ],
         "files": [ "find-command.php" ]
     },
     "require": {
