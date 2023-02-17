@@ -8,8 +8,12 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "psr-4": {"": "src/"},
-        "files": [ "find-command.php" ]
+        "psr-4": {
+            "": "src/"
+        },
+        "files": [
+            "find-command.php"
+        ]
     },
     "require": {
         "php": ">=5.4",
@@ -30,17 +34,18 @@
         }
     },
     "scripts": {
-      "lint": "run-linter-tests",
-      "phpcs": "run-phpcs-tests",
-      "phpunit": "run-php-unit-tests",
-      "behat": "run-behat-tests",
-      "prepare-tests": "install-package-tests",
-      "test": [
-          "@lint",
-          "@phpcs",
-          "@phpunit",
-          "@behat"
-      ]
+        "lint": "run-linter-tests",
+        "phpcs": "run-phpcs-tests",
+        "phpcbf": "run-phpcbf-cleanup",
+        "phpunit": "run-php-unit-tests",
+        "behat": "run-behat-tests",
+        "prepare-tests": "install-package-tests",
+        "test": [
+            "@lint",
+            "@phpcs",
+            "@phpunit",
+            "@behat"
+        ]
     },
     "extra": {
         "branch-alias": {
