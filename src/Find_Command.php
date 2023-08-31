@@ -310,9 +310,9 @@ class Find_Command {
 		$this->log( "Recursing into '{$path}'" );
 		foreach ( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
-				$this->current_depth++;
+				++$this->current_depth;
 				$this->recurse_directory( $file_info->getPathname() );
-				$this->current_depth--;
+				--$this->current_depth;
 			}
 		}
 	}
@@ -368,5 +368,4 @@ class Find_Command {
 		$s -= $m * 60;
 		return $h . ':' . sprintf( '%02d', $m ) . ':' . sprintf( '%02d', $s );
 	}
-
 }
