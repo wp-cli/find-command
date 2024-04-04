@@ -23,31 +23,6 @@ to significantly improve performance.
 Indicates depth at which the WordPress installations was found, and its
 alias, if it has one.
 
-```
-$ wp find ./
-+--------------------------------------+---------------------+-------+--------+
-| version_path                         | version             | depth | alias  |
-+--------------------------------------+---------------------+-------+--------+
-| /Users/wpcli/wp-includes/version.php | 4.8-alpha-39357-src | 2     | @wpcli |
-+--------------------------------------+---------------------+-------+--------+
-```
-
-**AVAILABLE FIELDS**
-
-These fields will be displayed by default for each installation:
-
-* version_path - Path to the version.php file.
-* version - WordPress version.
-* depth - Directory depth at which the installation was found.
-* alias - WP-CLI alias, if one is registered.
-
-These fields are optionally available:
-
-* wp_path - Path that can be passed to `--path=<path>` global parameter.
-* db_host - Host name for the database.
-* db_user - User name for the database.
-* db_name - Database name for the database.
-
 **OPTIONS**
 
 	<path>
@@ -82,6 +57,32 @@ These fields are optionally available:
 
 	[--verbose]
 		Log useful information to STDOUT.
+
+**AVAILABLE FIELDS**
+
+These fields will be displayed by default for each installation:
+
+* version_path - Path to the version.php file.
+* version - WordPress version.
+* depth - Directory depth at which the installation was found.
+* alias - WP-CLI alias, if one is registered.
+
+These fields are optionally available:
+
+* wp_path - Path that can be passed to `--path=<path>` global parameter.
+* db_host - Host name for the database.
+* db_user - User name for the database.
+* db_name - Database name for the database.
+
+**EXAMPLES**
+
+    # Find WordPress installations.
+    $ wp find ./
+    +--------------------------------------+---------------------+-------+--------+
+    | version_path                         | version             | depth | alias  |
+    +--------------------------------------+---------------------+-------+--------+
+    | /Users/wpcli/wp-includes/version.php | 4.8-alpha-39357-src | 2     | @wpcli |
+    +--------------------------------------+---------------------+-------+--------+
 
 ## Installing
 
