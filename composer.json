@@ -29,7 +29,8 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "johnpbloch/wordpress-core-installer": true
-        }
+        },
+        "lock": false
     },
     "scripts": {
         "lint": "run-linter-tests",
