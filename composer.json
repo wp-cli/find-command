@@ -18,7 +18,7 @@
         "wp-cli/wp-cli": "^2.12"
     },
     "require-dev": {
-        "wp-cli/wp-cli-tests": "dev-code-coverage"
+        "wp-cli/wp-cli-tests": "^4.3.9"
     },
     "config": {
         "process-timeout": 7200,
