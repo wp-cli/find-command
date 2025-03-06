@@ -18,12 +18,9 @@
         "wp-cli/wp-cli": "^2.12"
     },
     "require-dev": {
-        "wp-cli/wp-cli-tests": "^4"
+        "wp-cli/wp-cli-tests": "^4.3.9"
     },
     "config": {
-        "platform": {
-            "php": "5.6"
-        },
         "process-timeout": 7200,
         "sort-packages": true,
         "allow-plugins": {
@@ -33,11 +30,12 @@
         "lock": false
     },
     "scripts": {
+        "behat": "run-behat-tests",
+        "behat-rerun": "rerun-behat-tests",
         "lint": "run-linter-tests",
         "phpcs": "run-phpcs-tests",
         "phpcbf": "run-phpcbf-cleanup",
         "phpunit": "run-php-unit-tests",
-        "behat": "run-behat-tests",
         "prepare-tests": "install-package-tests",
         "test": [
             "@lint",
