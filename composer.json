@@ -14,7 +14,7 @@
         "files": [ "find-command.php" ]
     },
     "require": {
-        "php": ">=5.4",
+        "php": ">=7.2.24",
         "wp-cli/wp-cli": "^2.12"
     },
     "require-dev": {
