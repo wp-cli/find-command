@@ -8,7 +8,7 @@ class Find_Command {
 	/**
 	 * Paths we can probably ignore recursion into.
 	 *
-	 * @var array
+	 * @var array<string>
 	 */
 	private $ignored_paths = [
 		// System directories
@@ -94,21 +94,21 @@ class Find_Command {
 	/**
 	 * Start time for the script.
 	 *
-	 * @var integer
+	 * @var float
 	 */
-	private $start_time = false;
+	private $start_time;
 
 	/**
 	 * Resolved alias paths
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	private $resolved_aliases = [];
 
 	/**
 	 * Found WordPress installations.
 	 *
-	 * @var array
+	 * @var array<string, array<string, mixed>>
 	 */
 	private $found_wp = [];
 
@@ -190,7 +190,7 @@ class Find_Command {
 	 */
 	public function __invoke( $args, $assoc_args ) {
 		list( $path )    = $args;
-		$this->base_path = realpath( $path );
+		$this->base_path = (string) realpath( $path );
 		if ( ! $this->base_path ) {
 			WP_CLI::error( 'Invalid path specified.' );
 		}
@@ -235,7 +235,7 @@ class Find_Command {
 		// Don't recurse directories that probably don't have a WordPress installation.
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
-			$compared_path = preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#', '', $path );
+			$compared_path = (string) preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#', '', $path );
 			// Ignore all hidden system directories
 			$bits        = explode( '/', trim( $compared_path, '/' ) );
 			$current_dir = array_pop( $bits );
@@ -276,7 +276,7 @@ class Find_Command {
 				try {
 					$transformer = new WPConfigTransformer( $config_path );
 					foreach ( [ 'db_host', 'db_name', 'db_user' ] as $constant ) {
-						$value = $transformer->get_value( 'constant', strtoupper( $constant ) );
+						$value = (string) $transformer->get_value( 'constant', strtoupper( $constant ) );
 						// Clean up strings.
 						$first = substr( $value, 0, 1 );
 						$last  = substr( $value, -1 );
@@ -309,6 +309,10 @@ class Find_Command {
 			return;
 		}
 		$this->log( "Recursing into '{$path}'" );
+
+		/**
+		 * @var SplFileInfo $file_info
+		 */
 		foreach ( $iterator as $file_info ) {
 			if ( $file_info->isDir() ) {
 				++$this->current_depth;
@@ -322,7 +326,7 @@ class Find_Command {
 	 * Get the WordPress version for the installation, without executing the file.
 	 */
 	private static function get_wp_version( $path ) {
-		$contents = file_get_contents( $path );
+		$contents = (string) file_get_contents( $path );
 		preg_match( '#\$wp_version\s?=\s?[\'"]([^\'"]+)[\'"]#', $contents, $matches );
 		return ! empty( $matches[1] ) ? $matches[1] : '';
 	}
@@ -359,7 +363,7 @@ class Find_Command {
 	/**
 	 * Format a log timestamp into something human-readable.
 	 *
-	 * @param integer $s Log time in seconds
+	 * @param int|float $s Log time in seconds
 	 * @return string
 	 */
 	private static function format_log_timestamp( $s ) {
