@@ -217,3 +217,44 @@ Feature: Find WordPress installs on the filesystem
       """
       1
       """
+
+  Scenario: Directories with ignored path as substring should not be ignored
+    Given a WP install in 'wpblogs'
+    And a WP install in 'myjs'
+    And a WP install in 'logs'
+    And a WP install in 'js'
+
+    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    Then save STDOUT as {TEST_DIR}
+
+    When I run `wp find {TEST_DIR} --field=version_path --verbose`
+    Then STDOUT should contain:
+      """
+      Found WordPress installation at '{TEST_DIR}/wpblogs/wp-includes/version.php'
+      """
+    And STDOUT should contain:
+      """
+      Found WordPress installation at '{TEST_DIR}/myjs/wp-includes/version.php'
+      """
+    And STDOUT should not contain:
+      """
+      Found WordPress installation at '{TEST_DIR}/logs/wp-includes/version.php'
+      """
+    And STDOUT should not contain:
+      """
+      Found WordPress installation at '{TEST_DIR}/js/wp-includes/version.php'
+      """
+    And STDOUT should contain:
+      """
+      Matched ignored path. Skipping recursion into '{TEST_DIR}/logs/'
+      """
+    And STDOUT should contain:
+      """
+      Matched ignored path. Skipping recursion into '{TEST_DIR}/js/'
+      """
+
+    When I run `wp find {TEST_DIR} --format=count`
+    Then STDOUT should be:
+      """
+      2
+      """
