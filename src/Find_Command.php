@@ -244,7 +244,8 @@ class Find_Command {
 				return;
 			}
 			foreach ( $this->ignored_paths as $ignored_path ) {
-				if ( false !== stripos( $compared_path, $ignored_path ) ) {
+				// Match at directory boundaries using regex to ensure we match complete directory names
+				if ( preg_match( '#(^|/)' . preg_quote( $ignored_path, '#' ) . '#i', $compared_path ) ) {
 					$this->log( "Matched ignored path. Skipping recursion into '{$path}'" );
 					return;
 				}
