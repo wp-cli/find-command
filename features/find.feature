@@ -4,7 +4,7 @@ Feature: Find WordPress installs on the filesystem
     Given a WP install in 'subdir1'
     And a WP install in 'subdir2'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `wp find {TEST_DIR} --field=version_path | sort`
@@ -35,7 +35,7 @@ Feature: Find WordPress installs on the filesystem
     And a WP install in 'cache'
     And a WP install in 'tmp'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `wp find {TEST_DIR} --field=version_path --verbose`
@@ -74,7 +74,7 @@ Feature: Find WordPress installs on the filesystem
     And a WP install in 'sub/subdir2'
     And a WP install in 'sub/sub/subdir3'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `wp find {TEST_DIR} --verbose`
@@ -166,7 +166,7 @@ Feature: Find WordPress installs on the filesystem
     Given a WP install in 'subdir1'
     And a WP install in 'subdir2'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `echo "@test1:\n  path: {TEST_DIR}/subdir2" > wp-cli.yml`
@@ -184,7 +184,7 @@ Feature: Find WordPress installs on the filesystem
     And I run `mkdir -p subdir2/.svn`
     And a WP install in 'subdir2/.svn/wp-install'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `wp find {TEST_DIR} --format=count`
@@ -203,7 +203,7 @@ Feature: Find WordPress installs on the filesystem
     Given a WP install in 'subdir1'
     And a WP install in 'subdir2'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `wp find {TEST_DIR} --format=count`
@@ -224,7 +224,7 @@ Feature: Find WordPress installs on the filesystem
     And a WP install in 'logs'
     And a WP install in 'js'
 
-    When I run `wp eval --skip-wordpress 'echo realpath( getenv( "RUN_DIR" ) );'`
+    When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
     When I run `wp find {TEST_DIR} --field=version_path --verbose`

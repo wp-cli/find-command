@@ -2,6 +2,7 @@
 
 use WP_CLI\Utils;
 use WP_CLI\Formatter;
+use WP_CLI\Path;
 
 class Find_Command {
 
@@ -189,14 +190,17 @@ class Find_Command {
 	 * @when before_wp_load
 	 */
 	public function __invoke( $args, $assoc_args ) {
-		list( $path )    = $args;
-		$this->base_path = (string) realpath( $path );
-		if ( ! $this->base_path ) {
+		list( $path ) = $args;
+		$base_path    = (string) realpath( $path );
+		if ( ! $base_path ) {
 			WP_CLI::error( 'Invalid path specified.' );
 		}
+		$this->base_path          = Path::normalize( $base_path );
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
 		if ( ! empty( $assoc_args['include_ignored_paths'] ) ) {
-			$this->ignored_paths = array_merge( $this->ignored_paths, explode( ',', $assoc_args['include_ignored_paths'] ) );
+			$included_paths      = explode( ',', $assoc_args['include_ignored_paths'] );
+			$included_paths      = array_map( [ 'WP_CLI\Path', 'normalize' ], $included_paths );
+			$this->ignored_paths = array_merge( $this->ignored_paths, $included_paths );
 		}
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
 		$this->verbose   = Utils\get_flag_value( $assoc_args, 'verbose' );
@@ -206,7 +210,7 @@ class Find_Command {
 			if ( empty( $target['path'] ) ) {
 				continue;
 			}
-			$this->resolved_aliases[ rtrim( $target['path'], '/' ) ] = $alias;
+			$this->resolved_aliases[ rtrim( Path::normalize( $target['path'] ), '/' ) ] = $alias;
 		}
 
 		$fields = [ 'version_path', 'version', 'depth', 'alias' ];
@@ -228,6 +232,8 @@ class Find_Command {
 		if ( is_link( $path ) ) {
 			return;
 		}
+
+		$path = Path::normalize( $path );
 
 		// Provide consistent trailing slashes to all paths
 		$path = rtrim( $path, '/' ) . '/';
@@ -254,7 +260,7 @@ class Find_Command {
 
 		// This looks like a wp-includes directory, so check if it has a
 		// version.php file.
-		if ( DIRECTORY_SEPARATOR . 'wp-includes/' === substr( $path, -13 )
+		if ( '/wp-includes/' === substr( $path, -13 )
 			&& file_exists( $path . 'version.php' ) ) {
 			$version_path = $path . 'version.php';
 			$wp_path      = substr( $path, 0, -13 );
@@ -346,7 +352,7 @@ class Find_Command {
 		}
 
 		if ( $path ) {
-			$path = realpath( $path );
+			$path = Path::normalize( (string) realpath( $path ) );
 		}
 		return $path;
 	}
