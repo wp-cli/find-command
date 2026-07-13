@@ -201,7 +201,8 @@ class Find_Command {
 			$included_paths      = explode( ',', trim( $assoc_args['include_ignored_paths'], "\"' " ) );
 			$included_paths      = array_map(
 				static function ( $path ) {
-					return Path::normalize( trim( $path, "\"' " ) );
+					$path = Path::normalize( trim( $path, "\"' " ) );
+					return ltrim( rtrim( $path, '/' ) . '/', '/' );
 				},
 				$included_paths
 			);
@@ -252,7 +253,7 @@ class Find_Command {
 		// Don't recurse directories that probably don't have a WordPress installation.
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
-			$compared_path = (string) preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#', '', $path );
+			$compared_path = (string) preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#i', '', $path );
 			// Ignore all hidden system directories
 			$bits        = explode( '/', trim( $compared_path, '/' ) );
 			$current_dir = array_pop( $bits );
