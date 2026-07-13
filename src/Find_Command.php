@@ -198,8 +198,13 @@ class Find_Command {
 		$this->base_path          = Path::normalize( $base_path );
 		$this->skip_ignored_paths = Utils\get_flag_value( $assoc_args, 'skip-ignored-paths' );
 		if ( ! empty( $assoc_args['include_ignored_paths'] ) ) {
-			$included_paths      = explode( ',', $assoc_args['include_ignored_paths'] );
-			$included_paths      = array_map( [ 'WP_CLI\Path', 'normalize' ], $included_paths );
+			$included_paths      = explode( ',', trim( $assoc_args['include_ignored_paths'], "\"' " ) );
+			$included_paths      = array_map(
+				static function ( $path ) {
+					return Path::normalize( trim( $path, "\"' " ) );
+				},
+				$included_paths
+			);
 			$this->ignored_paths = array_merge( $this->ignored_paths, $included_paths );
 		}
 		$this->max_depth = Utils\get_flag_value( $assoc_args, 'max_depth', false );
@@ -215,7 +220,13 @@ class Find_Command {
 
 		$fields = [ 'version_path', 'version', 'depth', 'alias' ];
 		if ( ! empty( $assoc_args['fields'] ) ) {
-			$fields = explode( ',', $assoc_args['fields'] );
+			$fields = explode( ',', trim( $assoc_args['fields'], "\"' " ) );
+			$fields = array_map(
+				static function ( $field ) {
+					return trim( $field, "\"' " );
+				},
+				$fields
+			);
 		}
 
 		$this->start_time = microtime( true );

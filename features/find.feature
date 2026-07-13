@@ -70,7 +70,7 @@ Feature: Find WordPress installs on the filesystem
 
   Scenario: Use --max_depth=<depth> to specify max recursion depth
     Given a WP install in 'subdir1'
-    And I run `mkdir -p sub/sub`
+    And an empty sub/sub directory
     And a WP install in 'sub/subdir2'
     And a WP install in 'sub/sub/subdir3'
 
@@ -169,8 +169,11 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
-    When I run `echo "@test1:\n  path: {TEST_DIR}/subdir2" > wp-cli.yml`
-    Then the return code should be 0
+    Given a wp-cli.yml file:
+      """
+      @test1:
+        path: {TEST_DIR}/subdir2
+      """
 
     When I run `wp find {TEST_DIR} --fields=version_path,alias`
     Then STDOUT should be a table containing rows:
@@ -181,7 +184,7 @@ Feature: Find WordPress installs on the filesystem
   Scenario: Ignore hidden directories by default
     Given a WP install in 'subdir1'
     And a WP install in '.svn'
-    And I run `mkdir -p subdir2/.svn`
+    And an empty subdir2/.svn directory
     And a WP install in 'subdir2/.svn/wp-install'
 
     When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
@@ -212,7 +215,7 @@ Feature: Find WordPress installs on the filesystem
       2
       """
 
-    When I run `wp find {TEST_DIR} --include_ignored_paths='/subdir1/,/apple/' --format=count`
+    When I run `wp find {TEST_DIR} --include_ignored_paths=/subdir1/,/apple/ --format=count`
     Then STDOUT should be:
       """
       1
