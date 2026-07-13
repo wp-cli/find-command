@@ -258,7 +258,7 @@ class Find_Command {
 			&& file_exists( $path . 'version.php' ) ) {
 			$version_path = $path . 'version.php';
 			$wp_path      = substr( $path, 0, -13 );
-			$alias        = isset( $this->resolved_aliases[ $wp_path ] ) ? $this->resolved_aliases[ $wp_path ] : '';
+			$alias        = isset( $this->resolved_aliases[ $wp_path ] ) ? '@' . $this->resolved_aliases[ $wp_path ] : '';
 			$wp_path      = rtrim( $wp_path, '/' ) . '/';
 
 			$this->found_wp[ $version_path ] = [
