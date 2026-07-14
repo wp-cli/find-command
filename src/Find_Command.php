@@ -254,6 +254,10 @@ class Find_Command {
 		if ( ! $this->skip_ignored_paths ) {
 			// Assume base path doesn't need comparison
 			$compared_path = (string) preg_replace( '#^' . preg_quote( $this->base_path, '#' ) . '#i', '', $path );
+			WP_CLI::log( "DEBUG: base_path='{$this->base_path}'" );
+			WP_CLI::log( "DEBUG: path='{$path}'" );
+			WP_CLI::log( "DEBUG: compared_path='{$compared_path}'" );
+			WP_CLI::log( "DEBUG: ignored_paths='" . implode( ',', $this->ignored_paths ) . "'" );
 			// Ignore all hidden system directories
 			$bits        = explode( '/', trim( $compared_path, '/' ) );
 			$current_dir = array_pop( $bits );
