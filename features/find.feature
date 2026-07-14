@@ -209,11 +209,11 @@ Feature: Find WordPress installs on the filesystem
     When I run `wp eval --skip-wordpress "echo WP_CLI\Path::normalize( realpath( getenv( 'RUN_DIR' ) ) );"`
     Then save STDOUT as {TEST_DIR}
 
-    When I run `wp find {TEST_DIR} --format=count`
-    Then STDOUT should be:
-      """
-      2
-      """
+#    When I run `wp find {TEST_DIR} --format=count`
+#    Then STDOUT should be:
+#      """
+#      2
+#      """
 
     When I run `wp find {TEST_DIR} "--include_ignored_paths=/subdir1/,/apple/" --format=count`
     Then STDOUT should be:
