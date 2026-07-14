@@ -215,7 +215,7 @@ Feature: Find WordPress installs on the filesystem
       2
       """
 
-    When I run `wp find {TEST_DIR} --include_ignored_paths="/subdir1/,/apple/" --format=count`
+    When I run `wp find {TEST_DIR} "--include_ignored_paths=/subdir1/,/apple/" --format=count`
     Then STDOUT should be:
       """
       1
