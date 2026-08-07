@@ -213,7 +213,7 @@ class Find_Command {
 
 		$aliases = WP_CLI::get_runner()->aliases;
 		foreach ( $aliases as $alias => $target ) {
-			if ( empty( $target['path'] ) ) {
+			if ( ! is_array( $target ) || empty( $target['path'] ) || ! is_string( $target['path'] ) ) {
 				continue;
 			}
 			$this->resolved_aliases[ rtrim( Path::normalize( $target['path'] ), '/' ) ] = $alias;
