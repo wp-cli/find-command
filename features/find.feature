@@ -173,6 +173,13 @@ Feature: Find WordPress installs on the filesystem
       """
       @test1:
         path: {TEST_DIR}/subdir2
+      @invalid_empty:
+        path: ''
+      @invalid_non_string:
+        path:
+          - invalid
+      @invalid_group:
+        - @test1
       """
 
     When I run `wp find {TEST_DIR} --fields=version_path,alias`
